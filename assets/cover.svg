@@ -1,0 +1,89 @@
+<svg width="1920" height="960" viewBox="0 0 1920 960" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="coverBg" x1="0" y1="0" x2="1920" y2="960" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0866FF"/>
+      <stop offset="1" stop-color="#3B9EFF"/>
+    </linearGradient>
+    <linearGradient id="purpleBg" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6C2BD9"/>
+      <stop offset="1" stop-color="#B86EFF"/>
+    </linearGradient>
+    <linearGradient id="greenBg" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#00875A"/>
+      <stop offset="1" stop-color="#36B37E"/>
+    </linearGradient>
+    <linearGradient id="darkBg" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1C1E21"/>
+      <stop offset="1" stop-color="#3A3D42"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1920" height="960" fill="#F5F5F5"/>
+
+  <!-- Title text area -->
+  <text x="960" y="120" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="64" fill="#1a1a1a">Cover Generator</text>
+  <text x="960" y="170" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-weight="400" font-size="28" fill="#666">Branded covers for your Figma files — across multiple pages in one click</text>
+
+  <!-- Example cover 1: Blue (large, center-left) -->
+  <g transform="translate(120, 240)">
+    <rect width="540" height="304" rx="12" fill="url(#coverBg)" filter="drop-shadow(0 8px 24px rgba(0,0,0,0.15))"/>
+    <!-- Logo circle -->
+    <circle cx="40" cy="36" r="16" fill="white" fill-opacity="0.2"/>
+    <text x="66" y="42" font-family="Inter, system-ui, sans-serif" font-weight="400" font-size="14" fill="white" fill-opacity="0.9">Design Team</text>
+    <!-- Title -->
+    <text x="32" y="150" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="36" fill="white">Project Alpha</text>
+    <!-- Badge -->
+    <rect x="32" y="168" width="80" height="28" rx="14" fill="white"/>
+    <text x="50" y="187" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="12" fill="#0866FF">Design</text>
+    <!-- Date -->
+    <text x="420" y="274" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="24" fill="white">March 2026</text>
+  </g>
+
+  <!-- Example cover 2: Purple (top-right) -->
+  <g transform="translate(720, 240)">
+    <rect width="540" height="304" rx="12" fill="url(#purpleBg)" filter="drop-shadow(0 8px 24px rgba(0,0,0,0.15))"/>
+    <circle cx="40" cy="36" r="16" fill="white" fill-opacity="0.2"/>
+    <text x="66" y="42" font-family="Inter, system-ui, sans-serif" font-weight="400" font-size="14" fill="white" fill-opacity="0.9">Research Team</text>
+    <text x="32" y="150" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="36" fill="white">User Study</text>
+    <rect x="32" y="168" width="96" height="28" rx="14" fill="white"/>
+    <text x="44" y="187" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="12" fill="#6C2BD9">Research</text>
+    <text x="420" y="274" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="24" fill="white">March 2026</text>
+  </g>
+
+  <!-- Example cover 3: Green (bottom-left) -->
+  <g transform="translate(320, 600)">
+    <rect width="540" height="304" rx="12" fill="url(#greenBg)" filter="drop-shadow(0 8px 24px rgba(0,0,0,0.15))"/>
+    <circle cx="40" cy="36" r="16" fill="white" fill-opacity="0.2"/>
+    <text x="66" y="42" font-family="Inter, system-ui, sans-serif" font-weight="400" font-size="14" fill="white" fill-opacity="0.9">Engineering</text>
+    <text x="32" y="150" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="36" fill="white">Component Lib</text>
+    <rect x="32" y="168" width="112" height="28" rx="14" fill="white"/>
+    <text x="42" y="187" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="12" fill="#00875A">Engineering</text>
+    <text x="420" y="274" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="24" fill="white">March 2026</text>
+  </g>
+
+  <!-- Example cover 4: Dark (bottom-right) -->
+  <g transform="translate(920, 600)">
+    <rect width="540" height="304" rx="12" fill="url(#darkBg)" filter="drop-shadow(0 8px 24px rgba(0,0,0,0.15))"/>
+    <circle cx="40" cy="36" r="16" fill="white" fill-opacity="0.2"/>
+    <text x="66" y="42" font-family="Inter, system-ui, sans-serif" font-weight="400" font-size="14" fill="white" fill-opacity="0.9">Platform Team</text>
+    <text x="32" y="150" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="36" fill="white">Design System</text>
+    <rect x="32" y="168" width="100" height="28" rx="14" fill="white"/>
+    <text x="44" y="187" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="12" fill="#1C1E21">Prototype</text>
+    <text x="420" y="274" font-family="Inter, system-ui, sans-serif" font-weight="700" font-size="24" fill="white">March 2026</text>
+  </g>
+
+  <!-- Feature callouts -->
+  <g transform="translate(1520, 300)">
+    <rect width="320" height="44" rx="22" fill="#0866FF" fill-opacity="0.1"/>
+    <text x="160" y="28" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="16" fill="#0866FF">6 Gradient Presets + Custom</text>
+  </g>
+  <g transform="translate(1520, 360)">
+    <rect width="320" height="44" rx="22" fill="#0866FF" fill-opacity="0.1"/>
+    <text x="160" y="28" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="16" fill="#0866FF">Multi-Page Generation</text>
+  </g>
+  <g transform="translate(1520, 420)">
+    <rect width="320" height="44" rx="22" fill="#0866FF" fill-opacity="0.1"/>
+    <text x="160" y="28" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-weight="600" font-size="16" fill="#0866FF">Auto File Thumbnail</text>
+  </g>
+</svg>

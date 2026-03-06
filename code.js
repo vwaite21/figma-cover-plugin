@@ -211,16 +211,24 @@ figma.ui.onmessage = (msg) => __awaiter(void 0, void 0, void 0, function* () {
             firstCover = cover;
     }
     // Set file thumbnail from the first selected page's cover
+    let thumbnailSet = false;
     if (firstCover) {
         // Switch to the first page so we can set thumbnail and zoom
         figma.currentPage = selectedPages[0];
         figma.currentPage.selection = [firstCover];
         figma.viewport.scrollAndZoomIntoView([firstCover]);
-        yield figma.setFileThumbnailNodeAsync(firstCover);
+        try {
+            yield figma.setFileThumbnailNodeAsync(firstCover);
+            thumbnailSet = true;
+        }
+        catch (e) {
+            figma.notify('Warning: Could not set file thumbnail.', { error: true });
+        }
     }
     yield figma.saveVersionHistoryAsync('Cover generated');
     const count = selectedPages.length;
+    const thumbMsg = thumbnailSet ? '' : ' (thumbnail not set)';
     figma.notify(count === 1
-        ? 'Cover generated and set as file thumbnail!'
-        : `Covers generated on ${count} pages!`);
+        ? `Cover generated!${thumbMsg}`
+        : `Covers generated on ${count} pages!${thumbMsg}`);
 });

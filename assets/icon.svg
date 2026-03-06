@@ -1,0 +1,22 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0866FF"/>
+      <stop offset="1" stop-color="#3B9EFF"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded square background -->
+  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
+  <!-- Stylized cover/page icon -->
+  <rect x="30" y="24" width="68" height="80" rx="8" fill="white" fill-opacity="0.25"/>
+  <rect x="34" y="28" width="60" height="72" rx="6" fill="white"/>
+  <!-- Gradient bar at top of the "cover" -->
+  <rect x="34" y="28" width="60" height="24" rx="6" fill="url(#bg)"/>
+  <rect x="34" y="46" width="60" height="6" rx="0" fill="url(#bg)"/>
+  <!-- Title lines on cover -->
+  <rect x="42" y="60" width="44" height="6" rx="3" fill="#0866FF" fill-opacity="0.6"/>
+  <rect x="42" y="72" width="30" height="4" rx="2" fill="#0866FF" fill-opacity="0.3"/>
+  <rect x="42" y="82" width="36" height="4" rx="2" fill="#0866FF" fill-opacity="0.3"/>
+  <!-- Small badge pill -->
+  <rect x="42" y="34" width="24" height="10" rx="5" fill="white" fill-opacity="0.9"/>
+</svg>
