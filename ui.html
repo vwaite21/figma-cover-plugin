@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      font-size: 13px;
+      color: #333;
+      padding: 16px;
+      background: #fff;
+    }
+    h2 {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #1a1a1a;
+    }
+    .field {
+      margin-bottom: 14px;
+    }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    input:focus, select:focus {
+      border-color: #0866FF;
+    }
+    .badge-row {
+      display: flex;
+      gap: 8px;
+    }
+    .badge-row select {
+      flex: 1;
+    }
+    .badge-row input {
+      flex: 1;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #0866FF;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.15s;
+    }
+    button:hover {
+      background: #0554d4;
+    }
+    .hint {
+      font-size: 11px;
+      color: #999;
+      margin-top: 3px;
+    }
+    .gradient-options {
+      display: flex;
+      gap: 8px;
+    }
+    .gradient-option {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.15s, transform 0.1s;
+    }
+    .gradient-option:hover {
+      transform: scale(1.08);
+    }
+    .gradient-option.selected {
+      border-color: #0866FF;
+      box-shadow: 0 0 0 2px rgba(8, 102, 255, 0.3);
+    }
+    .custom-swatch {
+      background: conic-gradient(from 0deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000) !important;
+    }
+    .custom-colors {
+      margin-top: 8px;
+    }
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .color-row label {
+      margin-bottom: 0;
+      min-width: 30px;
+    }
+    .color-row input[type="color"] {
+      width: 48px;
+      height: 32px;
+      padding: 2px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .custom-preview {
+      height: 24px;
+      border-radius: 6px;
+      margin-top: 6px;
+    }
+    .pages-section {
+      margin-bottom: 14px;
+    }
+    .pages-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .pages-header label {
+      margin-bottom: 0;
+    }
+    .toggle-all {
+      font-size: 11px;
+      color: #0866FF;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      margin: 0;
+      width: auto;
+      font-weight: 500;
+    }
+    .toggle-all:hover {
+      text-decoration: underline;
+      background: none;
+    }
+    .page-list {
+      max-height: 120px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 4px 0;
+    }
+    .page-item {
+      display: flex;
+      align-items: center;
+      padding: 4px 10px;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .page-item:hover {
+      background: #f5f5f5;
+    }
+    .page-item input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+    }
+    .page-item span {
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  </style>
+</head>
+<body>
+  <h2>Cover Generator</h2>
+
+  <div class="field">
+    <label>Background Gradient</label>
+    <div class="gradient-options">
+      <div class="gradient-option selected" data-gradient="blue" style="background: linear-gradient(135deg, #0866FF, #3B9EFF);" title="Blue"></div>
+      <div class="gradient-option" data-gradient="purple" style="background: linear-gradient(135deg, #6C2BD9, #B86EFF);" title="Purple"></div>
+      <div class="gradient-option" data-gradient="green" style="background: linear-gradient(135deg, #00875A, #36B37E);" title="Green"></div>
+      <div class="gradient-option" data-gradient="dark" style="background: linear-gradient(135deg, #1C1E21, #3A3D42);" title="Dark"></div>
+      <div class="gradient-option" data-gradient="sunset" style="background: linear-gradient(135deg, #E8453C, #F5A623);" title="Sunset"></div>
+      <div class="gradient-option" data-gradient="ocean" style="background: linear-gradient(135deg, #0061FF, #00D4AA);" title="Ocean"></div>
+      <div class="gradient-option custom-swatch" data-gradient="custom" title="Custom">
+        <span style="font-size:18px;display:flex;align-items:center;justify-content:center;height:100%;color:#999;">+</span>
+      </div>
+    </div>
+    <div class="custom-colors" id="customColors" style="display:none;">
+      <div class="color-row">
+        <label>From</label>
+        <input type="color" id="colorFrom" value="#0866FF" />
+        <label>To</label>
+        <input type="color" id="colorTo" value="#3B9EFF" />
+      </div>
+      <div id="customPreview" class="custom-preview"></div>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Team / Product Space</label>
+    <input type="text" id="team" placeholder="Foundation Design | Identity Systems Team" />
+  </div>
+
+  <div class="field">
+    <label>Badge Label</label>
+    <div class="badge-row">
+      <select id="badgePreset">
+        <option value="Design">Design</option>
+        <option value="Research">Research</option>
+        <option value="Prototype">Prototype</option>
+        <option value="Engineering">Engineering</option>
+        <option value="custom">Custom…</option>
+      </select>
+      <input type="text" id="badgeCustom" placeholder="Custom label" style="display:none" />
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Contributors</label>
+    <input type="text" id="contributors" placeholder="Alexis Cotton (PD), Hadas Cohen (CD)" />
+    <div class="hint">Names and roles of design POCs</div>
+  </div>
+
+  <div class="field pages-section" id="pagesSection" style="display:none;">
+    <div class="pages-header">
+      <label>Pages</label>
+      <button class="toggle-all" id="toggleAll">Select All</button>
+    </div>
+    <div class="page-list" id="pageList"></div>
+  </div>
+
+  <button id="generate">Generate Cover</button>
+
+  <script>
+    const badgePreset = document.getElementById('badgePreset');
+    const badgeCustom = document.getElementById('badgeCustom');
+    const teamInput = document.getElementById('team');
+    let selectedGradient = 'blue';
+    let customFrom = '#0866FF';
+    let customTo = '#3B9EFF';
+    const customColorsDiv = document.getElementById('customColors');
+    const colorFromInput = document.getElementById('colorFrom');
+    const colorToInput = document.getElementById('colorTo');
+    const customPreview = document.getElementById('customPreview');
+
+    function updateCustomPreview() {
+      customFrom = colorFromInput.value;
+      customTo = colorToInput.value;
+      customPreview.style.background = `linear-gradient(135deg, ${customFrom}, ${customTo})`;
+    }
+
+    colorFromInput.addEventListener('input', updateCustomPreview);
+    colorToInput.addEventListener('input', updateCustomPreview);
+
+    // Gradient swatch selection
+    document.querySelectorAll('.gradient-option').forEach(el => {
+      el.addEventListener('click', () => {
+        document.querySelector('.gradient-option.selected').classList.remove('selected');
+        el.classList.add('selected');
+        selectedGradient = el.dataset.gradient;
+        customColorsDiv.style.display = selectedGradient === 'custom' ? 'block' : 'none';
+        if (selectedGradient === 'custom') updateCustomPreview();
+      });
+    });
+
+    // Listen for init message from plugin
+    let allPages = [];
+    const pageList = document.getElementById('pageList');
+    const pagesSection = document.getElementById('pagesSection');
+    const toggleAllBtn = document.getElementById('toggleAll');
+
+    window.onmessage = (event) => {
+      const msg = event.data.pluginMessage;
+      if (msg && msg.type === 'init') {
+        if (msg.fileName) {
+          teamInput.value = msg.fileName + ' | Design Team';
+        }
+        if (msg.pages && msg.pages.length > 0) {
+          allPages = msg.pages;
+          pageList.innerHTML = '';
+          allPages.forEach(page => {
+            const item = document.createElement('label');
+            item.className = 'page-item';
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.value = page.id;
+            cb.checked = page.id === msg.currentPageId;
+            const span = document.createElement('span');
+            span.textContent = page.name;
+            item.appendChild(cb);
+            item.appendChild(span);
+            pageList.appendChild(item);
+          });
+          pagesSection.style.display = 'block';
+          updateToggleLabel();
+        }
+      }
+    };
+
+    function getPageCheckboxes() {
+      return Array.from(pageList.querySelectorAll('input[type="checkbox"]'));
+    }
+
+    function updateToggleLabel() {
+      const boxes = getPageCheckboxes();
+      const allChecked = boxes.length > 0 && boxes.every(cb => cb.checked);
+      toggleAllBtn.textContent = allChecked ? 'Deselect All' : 'Select All';
+    }
+
+    toggleAllBtn.addEventListener('click', () => {
+      const boxes = getPageCheckboxes();
+      const allChecked = boxes.every(cb => cb.checked);
+      boxes.forEach(cb => cb.checked = !allChecked);
+      updateToggleLabel();
+    });
+
+    pageList.addEventListener('change', updateToggleLabel);
+
+    badgePreset.addEventListener('change', () => {
+      badgeCustom.style.display = badgePreset.value === 'custom' ? 'block' : 'none';
+    });
+
+    document.getElementById('generate').addEventListener('click', () => {
+      const team = teamInput.value || 'Foundation Design | Identity Systems Team';
+      const badge = badgePreset.value === 'custom'
+        ? (badgeCustom.value || 'Design')
+        : badgePreset.value;
+      const contributors = document.getElementById('contributors').value || '';
+
+      const selectedPageIds = getPageCheckboxes()
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+      parent.postMessage({
+        pluginMessage: {
+          type: 'generate',
+          team,
+          badge,
+          contributors,
+          gradient: selectedGradient,
+          customFrom: customFrom,
+          customTo: customTo,
+          selectedPageIds
+        }
+      }, '*');
+    });
+  </script>
+</body>
+</html>
