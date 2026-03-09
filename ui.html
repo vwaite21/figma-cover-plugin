@@ -121,60 +121,6 @@
       border-radius: 6px;
       margin-top: 6px;
     }
-    .pages-section {
-      margin-bottom: 14px;
-    }
-    .pages-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-    .pages-header label {
-      margin-bottom: 0;
-    }
-    .toggle-all {
-      font-size: 11px;
-      color: #0866FF;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 0;
-      margin: 0;
-      width: auto;
-      font-weight: 500;
-    }
-    .toggle-all:hover {
-      text-decoration: underline;
-      background: none;
-    }
-    .page-list {
-      max-height: 120px;
-      overflow-y: auto;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      padding: 4px 0;
-    }
-    .page-item {
-      display: flex;
-      align-items: center;
-      padding: 4px 10px;
-      gap: 8px;
-      cursor: pointer;
-    }
-    .page-item:hover {
-      background: #f5f5f5;
-    }
-    .page-item input[type="checkbox"] {
-      width: auto;
-      margin: 0;
-    }
-    .page-item span {
-      font-size: 12px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
   </style>
 </head>
 <body>
@@ -229,14 +175,6 @@
     <div class="hint">Names and roles of design POCs</div>
   </div>
 
-  <div class="field pages-section" id="pagesSection" style="display:none;">
-    <div class="pages-header">
-      <label>Pages</label>
-      <button class="toggle-all" id="toggleAll">Select All</button>
-    </div>
-    <div class="page-list" id="pageList"></div>
-  </div>
-
   <button id="generate">Generate Cover</button>
 
   <script>
@@ -272,57 +210,17 @@
     });
 
     // Listen for init message from plugin
-    let allPages = [];
-    const pageList = document.getElementById('pageList');
-    const pagesSection = document.getElementById('pagesSection');
-    const toggleAllBtn = document.getElementById('toggleAll');
-
     window.onmessage = (event) => {
       const msg = event.data.pluginMessage;
       if (msg && msg.type === 'init') {
         if (msg.fileName) {
           teamInput.value = msg.fileName + ' | Design Team';
         }
-        if (msg.pages && msg.pages.length > 0) {
-          allPages = msg.pages;
-          pageList.innerHTML = '';
-          allPages.forEach(page => {
-            const item = document.createElement('label');
-            item.className = 'page-item';
-            const cb = document.createElement('input');
-            cb.type = 'checkbox';
-            cb.value = page.id;
-            cb.checked = page.id === msg.currentPageId;
-            const span = document.createElement('span');
-            span.textContent = page.name;
-            item.appendChild(cb);
-            item.appendChild(span);
-            pageList.appendChild(item);
-          });
-          pagesSection.style.display = 'block';
-          updateToggleLabel();
-        }
       }
     };
 
-    function getPageCheckboxes() {
-      return Array.from(pageList.querySelectorAll('input[type="checkbox"]'));
-    }
-
-    function updateToggleLabel() {
-      const boxes = getPageCheckboxes();
-      const allChecked = boxes.length > 0 && boxes.every(cb => cb.checked);
-      toggleAllBtn.textContent = allChecked ? 'Deselect All' : 'Select All';
-    }
-
-    toggleAllBtn.addEventListener('click', () => {
-      const boxes = getPageCheckboxes();
-      const allChecked = boxes.every(cb => cb.checked);
-      boxes.forEach(cb => cb.checked = !allChecked);
-      updateToggleLabel();
-    });
-
-    pageList.addEventListener('change', updateToggleLabel);
+    // Tell the plugin code we're ready to receive messages
+    parent.postMessage({ pluginMessage: { type: 'ui-ready' } }, '*');
 
     badgePreset.addEventListener('change', () => {
       badgeCustom.style.display = badgePreset.value === 'custom' ? 'block' : 'none';
@@ -335,10 +233,6 @@
         : badgePreset.value;
       const contributors = document.getElementById('contributors').value || '';
 
-      const selectedPageIds = getPageCheckboxes()
-        .filter(cb => cb.checked)
-        .map(cb => cb.value);
-
       parent.postMessage({
         pluginMessage: {
           type: 'generate',
@@ -348,7 +242,6 @@
           gradient: selectedGradient,
           customFrom: customFrom,
           customTo: customTo,
-          selectedPageIds
         }
       }, '*');
     });

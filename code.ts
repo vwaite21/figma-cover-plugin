@@ -6,16 +6,15 @@ const META_LOGO_SVG = `
 </svg>
 `;
 
-figma.showUI(__html__, { width: 320, height: 560 });
+figma.showUI(__html__, { width: 320, height: 440 });
 
-// Send file name and page list to the UI
-const pages = figma.root.children.map(page => ({ id: page.id, name: page.name }));
-figma.ui.postMessage({
-  type: 'init',
-  fileName: figma.root.name,
-  pages,
-  currentPageId: figma.currentPage.id,
-});
+// Send file name to the UI once it's ready
+function sendInit() {
+  figma.ui.postMessage({
+    type: 'init',
+    fileName: figma.root.name,
+  });
+}
 
 function hexToRgb(hex: string) {
   const h = hex.replace('#', '');
@@ -35,25 +34,25 @@ const gradients: Record<string, { from: {r: number; g: number; b: number}; to: {
   ocean:  { from: { r: 0/255, g: 97/255, b: 255/255 },   to: { r: 0/255, g: 212/255, b: 170/255 } },
 };
 
-function createCoverOnPage(
+async function createCoverOnPage(
   page: PageNode,
   msg: { team: string; badge: string; contributors: string; gradient: string; customFrom: string; customTo: string },
   fontRegular: FontName,
   fontBold: FontName,
   grad: { from: {r: number; g: number; b: number}; to: {r: number; g: number; b: number} },
-): FrameNode {
-  figma.currentPage = page;
+): Promise<FrameNode> {
+  await figma.setCurrentPageAsync(page);
+
+  // Capture existing children before creating the cover
+  const existingNodes = [...page.children];
 
   const cover = figma.createFrame();
   cover.name = 'Cover';
   cover.resize(1920, 1080);
-
-  // Position at origin or offset from existing content
-  const nodes = page.children;
-  if (nodes.length > 0) {
+  if (existingNodes.length > 0) {
     let minX = Infinity;
     let minY = Infinity;
-    for (const node of nodes) {
+    for (const node of existingNodes) {
       if (node.x < minX) minX = node.x;
       if (node.y < minY) minY = node.y;
     }
@@ -202,64 +201,53 @@ figma.ui.onmessage = async (msg: {
   gradient: string;
   customFrom: string;
   customTo: string;
-  selectedPageIds: string[];
 }) => {
-  if (msg.type !== 'generate') return;
-
-  const selectedPageIds = msg.selectedPageIds || [figma.currentPage.id];
-  const selectedPages = figma.root.children.filter(p => selectedPageIds.includes(p.id));
-  if (selectedPages.length === 0) {
-    figma.notify('No pages selected.');
+  if (msg.type === 'ui-ready') {
+    sendInit();
     return;
   }
-
-  // Load fonts — try Facebook Sans first, fall back to Inter
-  let fontRegular: FontName = { family: 'Inter', style: 'Regular' };
-  let fontBold: FontName = { family: 'Inter', style: 'Bold' };
+  if (msg.type !== 'generate') return;
 
   try {
-    await figma.loadFontAsync({ family: 'Facebook Sans', style: 'Regular' });
-    await figma.loadFontAsync({ family: 'Facebook Sans', style: 'Bold' });
-    fontRegular = { family: 'Facebook Sans', style: 'Regular' };
-    fontBold = { family: 'Facebook Sans', style: 'Bold' };
-  } catch {
-    await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
-    await figma.loadFontAsync({ family: 'Inter', style: 'Bold' });
-  }
+    const page = figma.currentPage;
 
-  const grad = msg.gradient === 'custom'
-    ? { from: hexToRgb(msg.customFrom), to: hexToRgb(msg.customTo) }
-    : (gradients[msg.gradient] || gradients.blue);
-
-  let firstCover: FrameNode | null = null;
-  const originalPage = figma.currentPage;
-
-  for (const page of selectedPages) {
-    const cover = createCoverOnPage(page, msg, fontRegular, fontBold, grad);
-    if (!firstCover) firstCover = cover;
-  }
-
-  // Set file thumbnail from the first selected page's cover
-  let thumbnailSet = false;
-  if (firstCover) {
-    // Switch to the first page so we can set thumbnail and zoom
-    figma.currentPage = selectedPages[0];
-    figma.currentPage.selection = [firstCover];
-    figma.viewport.scrollAndZoomIntoView([firstCover]);
+    // Load fonts — try Facebook Sans first, fall back to Inter
+    let fontRegular: FontName = { family: 'Inter', style: 'Regular' };
+    let fontBold: FontName = { family: 'Inter', style: 'Bold' };
 
     try {
-      await figma.setFileThumbnailNodeAsync(firstCover);
-      thumbnailSet = true;
-    } catch (e) {
-      figma.notify('Warning: Could not set file thumbnail.', { error: true });
+      await figma.loadFontAsync({ family: 'Facebook Sans', style: 'Regular' });
+      await figma.loadFontAsync({ family: 'Facebook Sans', style: 'Bold' });
+      fontRegular = { family: 'Facebook Sans', style: 'Regular' };
+      fontBold = { family: 'Facebook Sans', style: 'Bold' };
+    } catch {
+      await figma.loadFontAsync({ family: 'Inter', style: 'Regular' });
+      await figma.loadFontAsync({ family: 'Inter', style: 'Bold' });
     }
+
+    const grad = msg.gradient === 'custom'
+      ? { from: hexToRgb(msg.customFrom), to: hexToRgb(msg.customTo) }
+      : (gradients[msg.gradient] || gradients.blue);
+
+    const cover = await createCoverOnPage(page, msg, fontRegular, fontBold, grad);
+
+    figma.currentPage.selection = [cover];
+    figma.viewport.scrollAndZoomIntoView([cover]);
+
+    try {
+      await figma.setFileThumbnailNodeAsync(cover);
+    } catch {
+      // Thumbnail setting is optional — ignore failures
+    }
+
+    try {
+      await figma.saveVersionHistoryAsync('Cover generated');
+    } catch {
+      // Version history save is optional — ignore failures
+    }
+
+    figma.notify('Cover generated!');
+  } catch (err: any) {
+    figma.notify(`Error: ${err?.message || err}`, { error: true });
   }
-
-  await figma.saveVersionHistoryAsync('Cover generated');
-
-  const count = selectedPages.length;
-  const thumbMsg = thumbnailSet ? '' : ' (thumbnail not set)';
-  figma.notify(count === 1
-    ? `Cover generated!${thumbMsg}`
-    : `Covers generated on ${count} pages!${thumbMsg}`);
 };
